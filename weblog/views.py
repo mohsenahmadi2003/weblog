@@ -14,7 +14,7 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'post_list': post_list, 'page_obj': page_obj}
-    return render(request, 'blog/index.html', context)
+    return render(request, 'weblog/index.html', context)
 
 
 @login_required
@@ -28,7 +28,7 @@ def new_post(request):
             return redirect('blog:post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'blog/new_post.html', {'form': form})
+    return render(request, 'weblog/new_post.html', {'form': form})
 
 
 @login_required
@@ -43,12 +43,12 @@ def edit_post(request, pk):
             return redirect('blog:post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/edit_post.html', {'form': form})
+    return render(request, 'weblog/edit_post.html', {'form': form})
 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    return render(request, 'weblog/post_detail.html', {'post': post})
 
 
 def signup(request):
@@ -67,7 +67,7 @@ def signup(request):
             return redirect('blog:index')
     else:
         form = SignUpForm()
-    return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'weblog/signup.html', {'form': form})
 
 
 def login_view(request):
@@ -80,7 +80,7 @@ def login_view(request):
             return redirect('blog:index')
         else:
             messages.error(request, 'Invalid username or password.')
-    return render(request, 'registration/login.html')
+    return render(request, 'weblog/login.html')
 
 
 def logout_view(request):
