@@ -15,3 +15,17 @@ def index(request):
     page_obj = paginator.get_page(page_number)
     context = {'post_list': post_list, 'page_obj': page_obj}
     return render(request, 'blog/index.html', context)
+
+
+@login_required
+def new_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('blog:post_detail', pk=post.pk)
+    else:
+        form = PostForm()
+    return render(request, 'blog/new_post.html', {'form': form})
