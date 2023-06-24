@@ -49,3 +49,22 @@ def edit_post(request, pk):
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post': post})
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()
+            user.profile.bio = form.cleaned_data.get('bio')
+            user.profile.avatar = form.cleaned_data.get('avatar')
+            user.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('blog:index')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
