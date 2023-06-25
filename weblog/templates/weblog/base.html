@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #c1f7f5;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 999;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .nav-links li {
+            list-style: none;
+            margin: 0 12px;
+        }
+
+        .nav-links li a {
+            position: relative;
+            color: #333;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 6px 0;
+            text-decoration: none;
+        }
+
+        .nav-links li a:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: #34efdf;
+            border-radius: 12px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-links li a:hover:before {
+            width: 100%;
+        }
+
+        .nav-links li.center a:before {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+
+        .nav-links li.upward a:before {
+            width: 100%;
+            bottom: -5px;
+            opacity: 0;
+        }
+
+        .nav-links li.upward a:hover:before {
+            bottom: 0px;
+            opacity: 1;
+        }
+
+        .nav-links li.forward a:before {
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+
+        .nav-links li.forward a:hover:before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .container-fluid {
+            margin-top: 80px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <ul class="nav-links">
+            {% if user.is_authenticated %}
+            <li class="forward"><a href="#">
+                    Welcome {{ user.username }}</a></li>
+            {% endif %}
+            <li><a href="{% url 'weblog:index' %}">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'weblog:new_post' %}">New Post</a></li>
+            <li><a href="{% url 'weblog:logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'weblog:login' %}">Login</a></li>
+            <li><a href="{% url 'weblog:signup' %}">Signup</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,14 +1,115 @@
-{% extends 'base.html' %}
+{% extends 'weblog/base.html' %}
 
 {% block content %}
-  <h1>Sign Up</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <label for="id_bio">Bio:</label>
-    {{ form.bio }}
-    <label for="id_avatar">Avatar:</label>
-    {{ form.avatar }}
-    <input type="submit" value="Sign Up">
-  </form>
+    <style>
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="file"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        /* Bootstrap styles */
+
+        .form-container {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+
+    <div class="container">
+        <div class="form-container">
+            <h1>Sign Up</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username:</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email:</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Password:</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                    {{ form.password2 }}
+                </div>
+                <input type="submit" value="Sign Up">
+            </form>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

@@ -1,6 +1,44 @@
-{% extends 'base.html' %}
+{% extends 'weblog/base.html' %}
 
 {% block content %}
+    <style>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+label {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  width: 300px;
+  font-size: 16px;
+}
+
+input[type="submit"] {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #555;
+}
+
+    </style>
   <h1>Login</h1>
   {% if user.is_authenticated %}
     <p>You are already logged in as {{ user.username }}.</p>
@@ -11,7 +49,7 @@
       <input type="text" name="username" required autofocus>
       <label for="password">Password:</label>
       <input type="password" name="password" required>
-      <input type="submit" value="Login">
+       <button type="submit">Login</button>
     </form>
     {% endif %}
     {% if messages %}

@@ -1,35 +1,137 @@
-{% extends 'base.html' %}
+{% extends 'weblog/base.html' %}
 
 {% block content %}
-  <h1>Latest Posts</h1>
-  {% if user.is_authenticated %}
-    <p>Welcome, {{ user.username }}!</p>
-    <a href="{% url 'blog:new_post' %}">New Post</a>
-    <a href="{% url 'blog:logout' %}">Logout</a>
-  {% else %}
-    <a href="{% url 'blog:login' %}">Login</a>
-    <a href="{% url 'blog:signup' %}">Signup</a>
-  {% endif %}
-  {% for post in post_list %}
-    <h2><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></h2>
-    <p>{{ post.text }}</p>
-    <p>by {{ post.author }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
-  {% endfor %}
-  <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; previous</a>
-        {% endif %}
+    <style>
+        .post-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
 
-        <span class="current-page">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        .post-item {
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid #dcdcdc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-item h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .post-item p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .post-item p:last-child {
+            margin-bottom: 0;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .step-links a,
+        .current-page {
+            display: inline-block;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .step-links a:hover,
+        .current-page {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        .step-links a:first-child,
+        .step-links a:last-child {
+            margin-right: 0;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .post-item {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+
+            .post-item h2 {
+                font-size: 20px;
+            }
+
+            .post-item p {
+                font-size: 14px;
+            }
+
+            .pagination {
+                margin-top: 10px;
+            }
+        }
+    </style>
+
+    <script>
+        const url = "http://127.0.0.1:8000/api/fetch_users";
+
+        async function getcount(url) {
+            let x = await fetch(url);
+            let y = await x.json();
+            document.getElementById("count2").innerHTML = `Number of users: ${y.user_count}`;
+        }
+
+        getcount(url);
+    </script>
+
+    <h2 id="count2"></h2>
+
+    <div class="post-list">
+        {% if post_list == None %}
+            <h2>There is no post</h2>
+        {% else %}
+            <h1>Latest Posts</h1>
+            {% for post in post_list %}
+                <div class="post-item">
+                    <h2><a href="{% url 'weblog:post_detail' post.pk %}">{{ post.title | title }}</a></h2>
+                    <p>{{ post.text|truncatechars:50 }}</p>
+                    <p>by {{ post.author }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current-page">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next &rsaquo;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
         </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next &rsaquo;</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-  </div>
+    </div>
 {% endblock %}

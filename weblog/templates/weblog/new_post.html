@@ -1,14 +1,43 @@
-{% extends 'base.html' %}
+{% extends 'weblog/base.html' %}
 
 {% block content %}
-  <h1>New Post</h1>
-  {% if user.is_authenticated %}
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Save">
-    </form>
-  {% else %}
-    <p>You must be logged in to create a new post.</p>
-  {% endif %}
+  <div class="container">
+    <h1>New Post</h1>
+    {% if user.is_authenticated %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">Title:</label>
+          {{ form.title}}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.text.id_for_label }}">Text:</label>
+          {{ form.text}}
+        </div>
+        <input type="submit" value="Save" class="btn btn-primary">
+      </form>
+    {% else %}
+      <p>You must be logged in to create a new post.</p>
+    {% endif %}
+  </div>
 {% endblock %}
+
+<style>
+  .container {
+    margin-top: 50px;
+  }
+
+  label {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  input,
+  textarea {
+    font-size: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+</style>

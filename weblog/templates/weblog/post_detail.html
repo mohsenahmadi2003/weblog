@@ -1,10 +1,91 @@
-{% extends 'base.html' %}
+{% extends 'weblog/base.html' %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <p>{{ post.text }}</p>
-  <p>by {{ post.author }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
-  {% if user.is_authenticated and user == post.author %}
-    <a href="{% url 'blog:edit_post' post.pk %}">Edit Post</a>
-  {% endif %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ post.title }}</h1>
+                <p class="card-text">{{ post.text|linebreaks }}</p>
+                <p class="card-text"><small class="text-muted">by {{ post.author }}
+                    on {{ post.created_at|date:"F j, Y, g:i a" }}</small></p>
+                {% if user.is_authenticated and user == post.author %}
+                    <a href="{% url 'weblog:edit_post' pk=post.pk %}" class="btn btn-primary">Edit Post</a>
+                    <a href="{% url 'weblog:comment' pk=post.pk %}" class="btn btn-success">Comment</a>
+                    <a href="{% url 'weblog:delete_post' pk=post.pk %}" class="btn btn-danger">Delete Post</a>
+                    {% else %}
+                    <a href="{% url 'weblog:comment' pk=post.pk %}" class="btn btn-success">Comment</a>
+                {% endif %}
+
+            </div>
+            <br>
+            <br>
+
+            {% if comments.exists %}
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#comments"
+                    aria-expanded="false" aria-controls="comments">
+                Show/Hide Comments
+            </button>
+            {% endif %}
+
+            <div class="collapse" id="comments">
+                {% for comment in comments %}
+                    <div class="card-body">
+                        <h3 class="card-title">{{ comment.author }}</h3>
+                        <p class="card-text">{{ comment.text }}</p>
+                        <p class="card-text"><small
+                                class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small></p>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
+
+<style>
+    .green {
+        color: #fff;
+        background-color: #21d900;
+        border-color: #21d900;
+    }
+
+    .green:hover {
+        color: #fff;
+        background-color: #21d900;
+        border-color: #21d900;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border: 1px solid #dcdcdc;
+        border-radius: 5px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+
+</style>
